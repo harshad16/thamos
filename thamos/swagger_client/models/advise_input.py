@@ -14,6 +14,7 @@ import pprint
 import re  # noqa: F401
 
 import six
+from thamos.swagger_client.models.object import Object  # noqa: F401,E501
 
 
 class AdviseInput(object):
@@ -29,8 +30,8 @@ class AdviseInput(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'application_stack': 'object',
-        'runtime_environment': 'object',
+        'application_stack': 'Object',
+        'runtime_environment': 'Object',
         'library_usage': 'object'
     }
 
@@ -58,7 +59,7 @@ class AdviseInput(object):
 
 
         :return: The application_stack of this AdviseInput.  # noqa: E501
-        :rtype: object
+        :rtype: Object
         """
         return self._application_stack
 
@@ -68,7 +69,7 @@ class AdviseInput(object):
 
 
         :param application_stack: The application_stack of this AdviseInput.  # noqa: E501
-        :type: object
+        :type: Object
         """
         if application_stack is None:
             raise ValueError("Invalid value for `application_stack`, must not be `None`")  # noqa: E501
@@ -81,7 +82,7 @@ class AdviseInput(object):
 
 
         :return: The runtime_environment of this AdviseInput.  # noqa: E501
-        :rtype: object
+        :rtype: Object
         """
         return self._runtime_environment
 
@@ -91,7 +92,7 @@ class AdviseInput(object):
 
 
         :param runtime_environment: The runtime_environment of this AdviseInput.  # noqa: E501
-        :type: object
+        :type: Object
         """
 
         self._runtime_environment = runtime_environment

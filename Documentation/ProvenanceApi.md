@@ -1,6 +1,6 @@
 # thamos.swagger_client.ProvenanceApi
 
-All URIs are relative to */api/v1*
+All URIs are relative to *https://raw.githubusercontent.com/api/v1*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------

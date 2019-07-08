@@ -31,7 +31,7 @@ class PythonStack(object):
     swagger_types = {
         'requirements': 'str',
         'requirements_lock': 'str',
-        'requirements_format': 'str[str]'
+        'requirements_format': 'list[str]'
     }
 
     attribute_map = {
@@ -108,7 +108,7 @@ class PythonStack(object):
         Lockfile format - defaults to pipenv if not explicitly specified.   # noqa: E501
 
         :return: The requirements_format of this PythonStack.  # noqa: E501
-        :rtype: str[str]
+        :rtype: list[str]
         """
         return self._requirements_format
 
@@ -119,7 +119,7 @@ class PythonStack(object):
         Lockfile format - defaults to pipenv if not explicitly specified.   # noqa: E501
 
         :param requirements_format: The requirements_format of this PythonStack.  # noqa: E501
-        :type: str[str]
+        :type: list[str]
         """
 
         self._requirements_format = requirements_format

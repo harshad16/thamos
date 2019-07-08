@@ -36,6 +36,7 @@ from invectio import gather_library_usage
 from . import __version__ as thamos_version
 from .swagger_client.rest import ApiException
 from .swagger_client import ApiClient
+from .swagger_client import BuildAnalysisApi
 from .swagger_client import Configuration
 from .swagger_client import PythonStack
 from .swagger_client import RuntimeEnvironment
@@ -55,6 +56,7 @@ _LIBRARIES_USAGE = frozenset(("tensorflow", "keras", "pytorch"))
 
 def with_api_client(func: typing.Callable):
     """Load configuration entries from Thoth configuration file."""
+
     @wraps(func)
     def wrapper(*args, **kwargs):
         config = Configuration()
@@ -72,8 +74,10 @@ def with_api_client(func: typing.Callable):
         start = monotonic()
         api_client = ApiClient(configuration=config)
         # Override default user-agent.
-        api_client.user_agent = f"Thamos/{thamos_version} (Python {platform.python_version()}; " \
-                                f"{platform.system()} {platform.release()})"
+        api_client.user_agent = (
+            f"Thamos/{thamos_version} (Python {platform.python_version()}; "
+            f"{platform.system()} {platform.release()})"
+        )
         print(api_client.user_agent)
         result = func(api_client, *args, **kwargs)
         _LOGGER.debug("Elapsed seconds processing request: %f", monotonic() - start)
@@ -84,18 +88,13 @@ def with_api_client(func: typing.Callable):
 
 def _wait_for_analysis(status_func: callable, analysis_id: str) -> None:
     """Wait for ongoing analysis to finish."""
+
     @contextmanager
     def _no_spinner():
         yield
 
-    spinner = partial(
-        yaspin,
-        Spinners.clock,
-        text=f"Waiting for response from Thoth (analysis: {analysis_id})...",
-    )
-    if _LOGGER.getEffectiveLevel() == logging.DEBUG or bool(
-        int(os.getenv("THAMOS_NO_PROGRESSBAR", 1))
-    ):
+    spinner = partial(yaspin, Spinners.clock, text=f"Waiting for response from Thoth (analysis: {analysis_id})...")
+    if _LOGGER.getEffectiveLevel() == logging.DEBUG or bool(int(os.getenv("THAMOS_NO_PROGRESSBAR", 1))):
         # CLI automatically injects THAMOS_NO_PROGRESSBAR=0 if user did not turned it off explictily.
         spinner = _no_spinner
 
@@ -106,26 +105,19 @@ def _wait_for_analysis(status_func: callable, analysis_id: str) -> None:
             if response.status.finished_at is not None:
                 break
             _LOGGER.debug(
-                "Waiting for %r to finish for %s seconds (state: %s)",
-                analysis_id,
-                sleep_time,
-                response.status.state,
+                "Waiting for %r to finish for %s seconds (state: %s)", analysis_id, sleep_time, response.status.state
             )
 
             sleep(sleep_time)
             sleep_time = min(sleep_time * 2, 10)
 
 
-def _retrieve_analysis_result(
-    retrieve_func: callable, analysis_id: str
-) -> typing.Optional[dict]:
+def _retrieve_analysis_result(retrieve_func: callable, analysis_id: str) -> typing.Optional[dict]:
     """Retrieve analysis result, raise error if analysis failed."""
     try:
         return retrieve_func(analysis_id)
     except ApiException as exc:
-        _LOGGER.debug(
-            "Retrieved error response %s from server: %s", exc.status, exc.reason
-        )
+        _LOGGER.debug("Retrieved error response %s from server: %s", exc.status, exc.reason)
         response = json.loads(exc.body)
         _LOGGER.debug("Error from server: %s", response)
         _LOGGER.error("%s (analysis: %s)", response["error"], analysis_id)
@@ -179,9 +171,7 @@ def advise(
         raise ValueError("No Pipfile content provided for advises")
 
     if runtime_environment and runtime_environment_name:
-        raise ValueError(
-            "Cannot use runtime_environment and runtime_environment_name at the same time"
-        )
+        raise ValueError("Cannot use runtime_environment and runtime_environment_name at the same time")
 
     if runtime_environment is None:
         runtime_environment = thoth_config.get_runtime_environment(runtime_environment_name) or dict()
@@ -194,7 +184,7 @@ def advise(
         priority = (
             runtime_environment.pop("recommendation_type", None),
             thoth_config.content.get("recommendation_type", None),
-            "stable"
+            "stable",
         )
         recommendation_type = next(filter(bool, priority))
 
@@ -213,19 +203,13 @@ def advise(
 
         runtime_environment = RuntimeEnvironment(**runtime_environment)
 
-    advise_input = AdviseInput(
-        stack, runtime_environment=runtime_environment, library_usage=library_usage
-    )
+    advise_input = AdviseInput(stack, runtime_environment=runtime_environment, library_usage=library_usage)
     api_instance = AdviseApi(api_client)
 
     if recommendation_type:
         recommendation_type = recommendation_type.lower()
 
-    parameters = {
-        "recommendation_type": recommendation_type,
-        "debug": debug,
-        "force": force,
-    }
+    parameters = {"recommendation_type": recommendation_type, "debug": debug, "force": force}
 
     if limit is not None:
         parameters["limit"] = limit
@@ -238,19 +222,13 @@ def advise(
 
     response = api_instance.post_advise_python(advise_input, **parameters)
 
-    _LOGGER.info(
-        "Successfully submitted advise analysis %r to %r",
-        response.analysis_id,
-        thoth_config.api_url,
-    )
+    _LOGGER.info("Successfully submitted advise analysis %r to %r", response.analysis_id, thoth_config.api_url)
     if nowait:
         return response.analysis_id
 
     _wait_for_analysis(api_instance.get_advise_python_status, response.analysis_id)
     _LOGGER.debug("Retrieving adviser result for %r", response.analysis_id)
-    response = _retrieve_analysis_result(
-        api_instance.get_advise_python, response.analysis_id
-    )
+    response = _retrieve_analysis_result(api_instance.get_advise_python, response.analysis_id)
     if not response:
         return None
 
@@ -318,18 +296,14 @@ def provenance_check(
     api_instance = ProvenanceApi(api_client)
     response = api_instance.post_provenance_python(stack, debug=debug, force=force, origin=origin)
     _LOGGER.info(
-        "Successfully submitted provenance check analysis %r to %r",
-        response.analysis_id,
-        thoth_config.api_url,
+        "Successfully submitted provenance check analysis %r to %r", response.analysis_id, thoth_config.api_url
     )
     if nowait:
         return response.analysis_id
 
     _wait_for_analysis(api_instance.get_provenance_python_status, response.analysis_id)
     _LOGGER.debug("Retrieving provenance check result for %r", response.analysis_id)
-    response = _retrieve_analysis_result(
-        api_instance.get_provenance_python, response.analysis_id
-    )
+    response = _retrieve_analysis_result(api_instance.get_provenance_python, response.analysis_id)
     if not response:
         return None
 
@@ -338,11 +312,7 @@ def provenance_check(
 
 
 def provenance_check_here(
-    *,
-    origin: str = None,
-    nowait: bool = False,
-    force: bool = False,
-    debug: bool = False,
+    *, origin: str = None, nowait: bool = False, force: bool = False, debug: bool = False
 ) -> typing.Optional[tuple]:
     """Submit a provenance check in current directory."""
     if not os.path.isfile("Pipfile"):
@@ -352,14 +322,7 @@ def provenance_check_here(
         raise FileNotFoundError("No Pipfile.lock found in current directory")
 
     with open("Pipfile", "r") as pipfile, open("Pipfile.lock", "r") as piplock:
-        return provenance_check(
-            pipfile.read(),
-            piplock.read(),
-            nowait=nowait,
-            force=force,
-            debug=debug,
-            origin=origin,
-        )
+        return provenance_check(pipfile.read(), piplock.read(), nowait=nowait, force=force, debug=debug, origin=origin)
 
 
 @with_api_client
@@ -393,28 +356,72 @@ def image_analysis(
             environment_type=environment_type,
         )
     else:
-        response = api_instance.post_analyze(
-            image=image, debug=debug, verify_tls=verify_tls, force=force
-        )
+        response = api_instance.post_analyze(image=image, debug=debug, verify_tls=verify_tls, force=force)
 
     _LOGGER.info(
-        "Successfully submitted provenance check analysis %r to %r",
-        response.analysis_id,
-        thoth_config.api_url,
+        "Successfully submitted provenance check analysis %r to %r", response.analysis_id, thoth_config.api_url
     )
     if nowait:
         return response.analysis_id
 
     _wait_for_analysis(api_instance.get_analyze_status, response.analysis_id)
-    _LOGGER.debug(
-        "Retrieving image analysis result result for %r", response.analysis_id
-    )
+    _LOGGER.debug("Retrieving image analysis result result for %r", response.analysis_id)
     response = _retrieve_analysis_result(api_instance.get_analyze, response.analysis_id)
     if not response:
         return None
 
     _LOGGER.debug("Image analysis metadata: %r", response.metadata)
     return response.result
+
+
+@with_api_client
+def build_analysis(
+    api_client: ApiClient,
+    image: str,
+    base_image: str,
+    buildlog: str,
+    *,
+    environment_type: str,
+    registry_user: str = None,
+    registry_password: str = None,
+    verify_tls: bool = True,
+    nowait: bool = False,
+    force: bool = False,
+    debug: bool = False,
+) -> typing.Union[typing.Dict, str]:
+    """Submit a build for analysis to Thoth."""
+    if not base_image and not base_image:
+        raise ValueError("No build info provided")
+
+    api_instance = BuildAnalysisApi(api_client)
+    if not image:
+        response = api_instance.post_build(
+            log_info=buildlog, base_image=base_image, debug=debug, verify_tls=verify_tls, force=force
+        )
+    if registry_user or registry_password:
+        # Swagger client handles None in a different way - we need to explicitly avoid passing
+        # registry user and registry password if they are not set.
+        response = api_instance.post_build(
+            log_info=buildlog,
+            base_image=base_image,
+            image=image,
+            debug=debug,
+            registry_user=registry_user,
+            registry_password=registry_password,
+            verify_tls=verify_tls,
+            force=force,
+            environment_type=environment_type,
+        )
+    else:
+        response = api_instance.post_build(
+            log_info=buildlog, base_image=base_image, image=image, debug=debug, verify_tls=verify_tls, force=force
+        )
+
+    _LOGGER.info("Successfully submitted build check analysis %r to %r", json.dumps(response), thoth_config.api_url)
+    if nowait:
+        return response
+
+    return response
 
 
 @with_api_client
@@ -430,9 +437,7 @@ def get_log(api_client: ApiClient, analysis_id: str):
         api_instance = AdviseApi(api_client)
         method = api_instance.get_advise_python_log
     else:
-        raise UnknownAnalysisType(
-            "Cannot determine analysis type from identifier: %r", analysis_id
-        )
+        raise UnknownAnalysisType("Cannot determine analysis type from identifier: %r", analysis_id)
 
     return method(analysis_id).log
 
@@ -450,9 +455,7 @@ def get_status(api_client: ApiClient, analysis_id: str):
         api_instance = AdviseApi(api_client)
         method = api_instance.get_advise_python_status
     else:
-        raise UnknownAnalysisType(
-            "Cannot determine analysis type from identifier: %r", analysis_id
-        )
+        raise UnknownAnalysisType("Cannot determine analysis type from identifier: %r", analysis_id)
 
     return method(analysis_id).status.to_dict()
 
@@ -470,9 +473,7 @@ def get_analysis_results(api_client: ApiClient, analysis_id: str):
         api_instance = AdviseApi(api_client)
         method = api_instance.get_advise_python
     else:
-        raise UnknownAnalysisType(
-            "Cannot determine analysis type from identifier: %r", analysis_id
-        )
+        raise UnknownAnalysisType("Cannot determine analysis type from identifier: %r", analysis_id)
     response = _retrieve_analysis_result(method, api_instance)
     _LOGGER.debug("Image analysis metadata: %r", response.metadata)
     return response.result
