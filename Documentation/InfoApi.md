@@ -1,6 +1,6 @@
 # thamos.swagger_client.InfoApi
 
-All URIs are relative to *http://test.thoth-station.ninja/api/v1*
+All URIs are relative to *https://raw.githubusercontent.com/api/v1*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------

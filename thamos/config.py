@@ -85,12 +85,16 @@ class _Configuration:
                 self._configuration = config_file.read()
 
                 if int(os.getenv("THAMOS_CONFIG_EXPAND_ENV", 0)):
-                    _LOGGER.info("Expanding configuration file based on environment variables")
+                    _LOGGER.info(
+                        "Expanding configuration file based on environment variables"
+                    )
                     self._configuration = self._configuration.format(**os.environ)
 
                 self._configuration = yaml.safe_load(self._configuration)
 
-    def create_default_config(self, template: str = None, nowrite: bool = False) -> typing.Optional[dict]:
+    def create_default_config(
+        self, template: str = None, nowrite: bool = False
+    ) -> typing.Optional[dict]:
         """Place default configuration into the current directory."""
         if not os.path.isdir(".git"):
             _LOGGER.warning("Configuration file is not created in the root of git repo")
@@ -107,7 +111,7 @@ class _Configuration:
         cpu_info = discover_cpu()
         cuda_version = discover_cuda_version()
         # Add quotes for textual representation in the config file.
-        cuda_version = f"'{cuda_version}" if cuda_version is not None else 'null'
+        cuda_version = f"'{cuda_version}" if cuda_version is not None else "null"
         os_name, os_version = discover_distribution()
         python_version = discover_python_version()
 
@@ -116,7 +120,7 @@ class _Configuration:
             os_name=os_name,
             os_version=os_version,
             python_version=python_version,
-            **cpu_info
+            **cpu_info,
         )
 
         if not nowrite:
@@ -202,7 +206,10 @@ class _Configuration:
 
     def api_discovery(self, host: str = None) -> str:
         """Discover API versions available, return the most recent one supported by client and server."""
-        api_url = urljoin("https://" + host, "/api/v1")
+        if "http" in host:
+            api_url = host
+        else:
+            api_url = urljoin("https://" + host, "/api/v1")
         self.tls_verify = (
             self.tls_verify
             if self.tls_verify is not None
@@ -222,7 +229,10 @@ class _Configuration:
                 )
         except Exception:
             # Try without TLS - maybe router was not configured to use TLS.
-            api_url = urljoin("http://" + host, "/api/v1")
+            if "api" in host:
+                api_url = host
+            else:
+                api_url = urljoin("http://" + host, "/api/v1")
             response = requests.get(api_url, headers={"Accept": "application/json"})
             try:
                 response.raise_for_status()

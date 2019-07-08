@@ -29,60 +29,39 @@ class RuntimeEnvironment(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'cuda_version': 'str',
         'hardware': 'object',
-        'name': 'str',
         'operating_system': 'object',
-        'python_version': 'str'
+        'python_version': 'str',
+        'cuda_version': 'str',
+        'name': 'str'
     }
 
     attribute_map = {
-        'cuda_version': 'cuda_version',
         'hardware': 'hardware',
-        'name': 'name',
         'operating_system': 'operating_system',
-        'python_version': 'python_version'
+        'python_version': 'python_version',
+        'cuda_version': 'cuda_version',
+        'name': 'name'
     }
 
-    def __init__(self, cuda_version=None, hardware=None, name=None, operating_system=None, python_version=None):  # noqa: E501
+    def __init__(self, hardware=None, operating_system=None, python_version=None, cuda_version=None, name=None):  # noqa: E501
         """RuntimeEnvironment - a model defined in Swagger"""  # noqa: E501
-        self._cuda_version = None
         self._hardware = None
-        self._name = None
         self._operating_system = None
         self._python_version = None
+        self._cuda_version = None
+        self._name = None
         self.discriminator = None
-        if cuda_version is not None:
-            self.cuda_version = cuda_version
         if hardware is not None:
             self.hardware = hardware
-        if name is not None:
-            self.name = name
         if operating_system is not None:
             self.operating_system = operating_system
         if python_version is not None:
             self.python_version = python_version
-
-    @property
-    def cuda_version(self):
-        """Gets the cuda_version of this RuntimeEnvironment.  # noqa: E501
-
-
-        :return: The cuda_version of this RuntimeEnvironment.  # noqa: E501
-        :rtype: str
-        """
-        return self._cuda_version
-
-    @cuda_version.setter
-    def cuda_version(self, cuda_version):
-        """Sets the cuda_version of this RuntimeEnvironment.
-
-
-        :param cuda_version: The cuda_version of this RuntimeEnvironment.  # noqa: E501
-        :type: str
-        """
-
-        self._cuda_version = cuda_version
+        if cuda_version is not None:
+            self.cuda_version = cuda_version
+        if name is not None:
+            self.name = name
 
     @property
     def hardware(self):
@@ -104,27 +83,6 @@ class RuntimeEnvironment(object):
         """
 
         self._hardware = hardware
-
-    @property
-    def name(self):
-        """Gets the name of this RuntimeEnvironment.  # noqa: E501
-
-
-        :return: The name of this RuntimeEnvironment.  # noqa: E501
-        :rtype: str
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name):
-        """Sets the name of this RuntimeEnvironment.
-
-
-        :param name: The name of this RuntimeEnvironment.  # noqa: E501
-        :type: str
-        """
-
-        self._name = name
 
     @property
     def operating_system(self):
@@ -167,6 +125,48 @@ class RuntimeEnvironment(object):
         """
 
         self._python_version = python_version
+
+    @property
+    def cuda_version(self):
+        """Gets the cuda_version of this RuntimeEnvironment.  # noqa: E501
+
+
+        :return: The cuda_version of this RuntimeEnvironment.  # noqa: E501
+        :rtype: str
+        """
+        return self._cuda_version
+
+    @cuda_version.setter
+    def cuda_version(self, cuda_version):
+        """Sets the cuda_version of this RuntimeEnvironment.
+
+
+        :param cuda_version: The cuda_version of this RuntimeEnvironment.  # noqa: E501
+        :type: str
+        """
+
+        self._cuda_version = cuda_version
+
+    @property
+    def name(self):
+        """Gets the name of this RuntimeEnvironment.  # noqa: E501
+
+
+        :return: The name of this RuntimeEnvironment.  # noqa: E501
+        :rtype: str
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        """Sets the name of this RuntimeEnvironment.
+
+
+        :param name: The name of this RuntimeEnvironment.  # noqa: E501
+        :type: str
+        """
+
+        self._name = name
 
     def to_dict(self):
         """Returns the model properties as a dict"""

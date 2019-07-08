@@ -29,105 +29,59 @@ class Info(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'amun_api_url': 'str',
-        'backend_namespace': 'str',
         'deployment_name': 'str',
+        'version': 'str',
+        's3_endpoint_url': 'str',
+        's3_bucket_prefix': 'str',
         'dgraph_host': 'str',
+        'amun_api_url': 'str',
         'frontend_namespace': 'str',
         'middletier_namespace': 'str',
-        's3_bucket_prefix': 'str',
-        's3_endpoint_url': 'str',
-        'version': 'str'
+        'backend_namespace': 'str'
     }
 
     attribute_map = {
-        'amun_api_url': 'amun_api_url',
-        'backend_namespace': 'backend_namespace',
         'deployment_name': 'deployment_name',
+        'version': 'version',
+        's3_endpoint_url': 's3_endpoint_url',
+        's3_bucket_prefix': 's3_bucket_prefix',
         'dgraph_host': 'dgraph_host',
+        'amun_api_url': 'amun_api_url',
         'frontend_namespace': 'frontend_namespace',
         'middletier_namespace': 'middletier_namespace',
-        's3_bucket_prefix': 's3_bucket_prefix',
-        's3_endpoint_url': 's3_endpoint_url',
-        'version': 'version'
+        'backend_namespace': 'backend_namespace'
     }
 
-    def __init__(self, amun_api_url=None, backend_namespace=None, deployment_name=None, dgraph_host=None, frontend_namespace=None, middletier_namespace=None, s3_bucket_prefix=None, s3_endpoint_url=None, version=None):  # noqa: E501
+    def __init__(self, deployment_name=None, version=None, s3_endpoint_url=None, s3_bucket_prefix=None, dgraph_host=None, amun_api_url=None, frontend_namespace=None, middletier_namespace=None, backend_namespace=None):  # noqa: E501
         """Info - a model defined in Swagger"""  # noqa: E501
-        self._amun_api_url = None
-        self._backend_namespace = None
         self._deployment_name = None
+        self._version = None
+        self._s3_endpoint_url = None
+        self._s3_bucket_prefix = None
         self._dgraph_host = None
+        self._amun_api_url = None
         self._frontend_namespace = None
         self._middletier_namespace = None
-        self._s3_bucket_prefix = None
-        self._s3_endpoint_url = None
-        self._version = None
+        self._backend_namespace = None
         self.discriminator = None
-        if amun_api_url is not None:
-            self.amun_api_url = amun_api_url
-        if backend_namespace is not None:
-            self.backend_namespace = backend_namespace
         if deployment_name is not None:
             self.deployment_name = deployment_name
+        if version is not None:
+            self.version = version
+        if s3_endpoint_url is not None:
+            self.s3_endpoint_url = s3_endpoint_url
+        if s3_bucket_prefix is not None:
+            self.s3_bucket_prefix = s3_bucket_prefix
         if dgraph_host is not None:
             self.dgraph_host = dgraph_host
+        if amun_api_url is not None:
+            self.amun_api_url = amun_api_url
         if frontend_namespace is not None:
             self.frontend_namespace = frontend_namespace
         if middletier_namespace is not None:
             self.middletier_namespace = middletier_namespace
-        if s3_bucket_prefix is not None:
-            self.s3_bucket_prefix = s3_bucket_prefix
-        if s3_endpoint_url is not None:
-            self.s3_endpoint_url = s3_endpoint_url
-        if version is not None:
-            self.version = version
-
-    @property
-    def amun_api_url(self):
-        """Gets the amun_api_url of this Info.  # noqa: E501
-
-        Amun API host to which this deployment talks to (set to null if no Amun deployment is used).  # noqa: E501
-
-        :return: The amun_api_url of this Info.  # noqa: E501
-        :rtype: str
-        """
-        return self._amun_api_url
-
-    @amun_api_url.setter
-    def amun_api_url(self, amun_api_url):
-        """Sets the amun_api_url of this Info.
-
-        Amun API host to which this deployment talks to (set to null if no Amun deployment is used).  # noqa: E501
-
-        :param amun_api_url: The amun_api_url of this Info.  # noqa: E501
-        :type: str
-        """
-
-        self._amun_api_url = amun_api_url
-
-    @property
-    def backend_namespace(self):
-        """Gets the backend_namespace of this Info.  # noqa: E501
-
-        Frontend namespace name.  # noqa: E501
-
-        :return: The backend_namespace of this Info.  # noqa: E501
-        :rtype: str
-        """
-        return self._backend_namespace
-
-    @backend_namespace.setter
-    def backend_namespace(self, backend_namespace):
-        """Sets the backend_namespace of this Info.
-
-        Frontend namespace name.  # noqa: E501
-
-        :param backend_namespace: The backend_namespace of this Info.  # noqa: E501
-        :type: str
-        """
-
-        self._backend_namespace = backend_namespace
+        if backend_namespace is not None:
+            self.backend_namespace = backend_namespace
 
     @property
     def deployment_name(self):
@@ -153,6 +107,75 @@ class Info(object):
         self._deployment_name = deployment_name
 
     @property
+    def version(self):
+        """Gets the version of this Info.  # noqa: E501
+
+        Version of Thoth components deployed. A special value @dev signalizes a developer's build.  # noqa: E501
+
+        :return: The version of this Info.  # noqa: E501
+        :rtype: str
+        """
+        return self._version
+
+    @version.setter
+    def version(self, version):
+        """Sets the version of this Info.
+
+        Version of Thoth components deployed. A special value @dev signalizes a developer's build.  # noqa: E501
+
+        :param version: The version of this Info.  # noqa: E501
+        :type: str
+        """
+
+        self._version = version
+
+    @property
+    def s3_endpoint_url(self):
+        """Gets the s3_endpoint_url of this Info.  # noqa: E501
+
+        S3 endpoint used for storing results.  # noqa: E501
+
+        :return: The s3_endpoint_url of this Info.  # noqa: E501
+        :rtype: str
+        """
+        return self._s3_endpoint_url
+
+    @s3_endpoint_url.setter
+    def s3_endpoint_url(self, s3_endpoint_url):
+        """Sets the s3_endpoint_url of this Info.
+
+        S3 endpoint used for storing results.  # noqa: E501
+
+        :param s3_endpoint_url: The s3_endpoint_url of this Info.  # noqa: E501
+        :type: str
+        """
+
+        self._s3_endpoint_url = s3_endpoint_url
+
+    @property
+    def s3_bucket_prefix(self):
+        """Gets the s3_bucket_prefix of this Info.  # noqa: E501
+
+        Bucket prefix used when storing results on S3 compatible API (Ceph).  # noqa: E501
+
+        :return: The s3_bucket_prefix of this Info.  # noqa: E501
+        :rtype: str
+        """
+        return self._s3_bucket_prefix
+
+    @s3_bucket_prefix.setter
+    def s3_bucket_prefix(self, s3_bucket_prefix):
+        """Sets the s3_bucket_prefix of this Info.
+
+        Bucket prefix used when storing results on S3 compatible API (Ceph).  # noqa: E501
+
+        :param s3_bucket_prefix: The s3_bucket_prefix of this Info.  # noqa: E501
+        :type: str
+        """
+
+        self._s3_bucket_prefix = s3_bucket_prefix
+
+    @property
     def dgraph_host(self):
         """Gets the dgraph_host of this Info.  # noqa: E501
 
@@ -174,6 +197,29 @@ class Info(object):
         """
 
         self._dgraph_host = dgraph_host
+
+    @property
+    def amun_api_url(self):
+        """Gets the amun_api_url of this Info.  # noqa: E501
+
+        Amun API host to which this deployment talks to (set to null if no Amun deployment is used).  # noqa: E501
+
+        :return: The amun_api_url of this Info.  # noqa: E501
+        :rtype: str
+        """
+        return self._amun_api_url
+
+    @amun_api_url.setter
+    def amun_api_url(self, amun_api_url):
+        """Sets the amun_api_url of this Info.
+
+        Amun API host to which this deployment talks to (set to null if no Amun deployment is used).  # noqa: E501
+
+        :param amun_api_url: The amun_api_url of this Info.  # noqa: E501
+        :type: str
+        """
+
+        self._amun_api_url = amun_api_url
 
     @property
     def frontend_namespace(self):
@@ -222,73 +268,27 @@ class Info(object):
         self._middletier_namespace = middletier_namespace
 
     @property
-    def s3_bucket_prefix(self):
-        """Gets the s3_bucket_prefix of this Info.  # noqa: E501
+    def backend_namespace(self):
+        """Gets the backend_namespace of this Info.  # noqa: E501
 
-        Bucket prefix used when storing results on S3 compatible API (Ceph).  # noqa: E501
+        Frontend namespace name.  # noqa: E501
 
-        :return: The s3_bucket_prefix of this Info.  # noqa: E501
+        :return: The backend_namespace of this Info.  # noqa: E501
         :rtype: str
         """
-        return self._s3_bucket_prefix
+        return self._backend_namespace
 
-    @s3_bucket_prefix.setter
-    def s3_bucket_prefix(self, s3_bucket_prefix):
-        """Sets the s3_bucket_prefix of this Info.
+    @backend_namespace.setter
+    def backend_namespace(self, backend_namespace):
+        """Sets the backend_namespace of this Info.
 
-        Bucket prefix used when storing results on S3 compatible API (Ceph).  # noqa: E501
+        Frontend namespace name.  # noqa: E501
 
-        :param s3_bucket_prefix: The s3_bucket_prefix of this Info.  # noqa: E501
+        :param backend_namespace: The backend_namespace of this Info.  # noqa: E501
         :type: str
         """
 
-        self._s3_bucket_prefix = s3_bucket_prefix
-
-    @property
-    def s3_endpoint_url(self):
-        """Gets the s3_endpoint_url of this Info.  # noqa: E501
-
-        S3 endpoint used for storing results.  # noqa: E501
-
-        :return: The s3_endpoint_url of this Info.  # noqa: E501
-        :rtype: str
-        """
-        return self._s3_endpoint_url
-
-    @s3_endpoint_url.setter
-    def s3_endpoint_url(self, s3_endpoint_url):
-        """Sets the s3_endpoint_url of this Info.
-
-        S3 endpoint used for storing results.  # noqa: E501
-
-        :param s3_endpoint_url: The s3_endpoint_url of this Info.  # noqa: E501
-        :type: str
-        """
-
-        self._s3_endpoint_url = s3_endpoint_url
-
-    @property
-    def version(self):
-        """Gets the version of this Info.  # noqa: E501
-
-        Version of Thoth components deployed. A special value @dev signalizes a developer's build.  # noqa: E501
-
-        :return: The version of this Info.  # noqa: E501
-        :rtype: str
-        """
-        return self._version
-
-    @version.setter
-    def version(self, version):
-        """Sets the version of this Info.
-
-        Version of Thoth components deployed. A special value @dev signalizes a developer's build.  # noqa: E501
-
-        :param version: The version of this Info.  # noqa: E501
-        :type: str
-        """
-
-        self._version = version
+        self._backend_namespace = backend_namespace
 
     def to_dict(self):
         """Returns the model properties as a dict"""
